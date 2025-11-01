@@ -1,0 +1,5 @@
+baseURL: https://blog.danielscoffee.com/
+languageCode: en-us
+title: danielscoffee blog
+
+theme: coffeeblog
