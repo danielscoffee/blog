@@ -1,8 +1,6 @@
-baseURL: https://me.danielscoffee.com/
-defaultContentLanguage: en
-title: danielscoffee
-
-theme: coffeepsite
+baseURL: https://example.org/
+languageCode: en-US
+title: My New Hugo Site
 
 languages:
   en:
@@ -13,15 +11,15 @@ languages:
         main:
           - identifier: home
             name: Home
-            pageRef: /
+            pageRef: /pt/
             weight: 10
           - identifier: posts
             name: Posts
-            pageRef: /posts
+            pageRef: /pt/posts
             weight: 20
           - identifier: tag
             name: Tags
-            pageRef: /tags
+            pageRef: /pt/tags
             weight: 30
    
   pt:
@@ -61,3 +59,8 @@ languages:
             pageRef: /es/tags
             weight: 30
 
+
+module:
+  hugoVersion:
+    extended: false
+    min: 0.146.0

@@ -1,0 +1,14 @@
+@use 'base' as *;
+
+footer {
+  align-items: center;
+  margin-top: auto;
+  padding-top: 2rem;
+  color: $c-text-light;
+  font-size: 0.875rem;
+  opacity: 0.7;
+  
+  [data-theme="dark"] & {
+    color: $c-text-light-dark;
+  }
+}

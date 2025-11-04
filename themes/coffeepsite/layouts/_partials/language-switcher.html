@@ -1,0 +1,36 @@
+{{- if hugo.IsMultilingual }}
+<div class="language-switcher">
+  <button class="lang-toggle" aria-label="Select language">
+    <span class="current-lang">{{ .Language.LanguageName }}</span>
+    <svg class="lang-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <div class="lang-dropdown">
+    {{- range site.Home.AllTranslations }}
+      {{- $isCurrentLang := eq .Language.Lang $.Language.Lang }}
+      {{- $url := .RelPermalink }}
+      {{- if and (not $isCurrentLang) $.IsTranslated }}
+        {{- range $.Translations }}
+          {{- if eq .Language.Lang $isCurrentLang }}
+            {{- $url = .RelPermalink }}
+          {{- end }}
+        {{- end }}
+      {{- else if not $isCurrentLang }}
+        {{- if $.IsPage }}
+          {{- $url = printf "/%s/" .Language.Lang }}
+        {{- else }}
+          {{- $url = .RelPermalink }}
+        {{- end }}
+      {{- else }}
+        {{- $url = $.RelPermalink }}
+      {{- end }}
+      <a href="{{ $url }}" 
+         lang="{{ .Language.Lang }}" 
+         class="lang-link {{ if $isCurrentLang }}active{{ end }}">
+        {{ .Language.LanguageName }}
+      </a>
+    {{- end }}
+  </div>
+</div>
+{{- end }}

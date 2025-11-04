@@ -1,0 +1,56 @@
+$c-text: #2e3440;
+$c-text-light: #4c566a;
+$c-bg: #ffffff;
+$c-bg-soft: #f8f9fa;
+$c-border: #e5e7eb;
+$c-accent: #6b7280;
+$c-accent-light: #9ca3af;
+$c-accent-highlight: rgba(107, 114, 128, 0.08);
+
+$c-text-dark: #e5e7eb;
+$c-text-light-dark: #9ca3af;
+$c-bg-dark: #1a1a1a;
+$c-bg-soft-dark: #2a2a2a;
+$c-border-dark: #3a3a3a;
+$c-accent-dark: #9ca3af;
+$c-accent-light-dark: #d1d5db;
+$c-accent-highlight-dark: rgba(156, 163, 175, 0.08);
+
+$shadow-light: 0 4px 12px rgba(0, 0, 0, 0.1);
+$shadow-dark: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+$font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+$font-mono: 'Fira Code', 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+
+body {
+  color: $c-text;
+  background-color: $c-bg;
+  font-family: $font-sans;
+  font-weight: 400;
+  padding: 2rem 1.5rem;
+  max-width: 65ch;
+  margin: 0 auto;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="dark"] body {
+  color: $c-text-dark;
+  background-color: $c-bg-dark;
+}

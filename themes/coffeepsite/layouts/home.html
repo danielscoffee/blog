@@ -1,0 +1,24 @@
+{{ define "main" }}
+  {{ .Content }}
+  
+  <div class="recent-posts">
+    <h2 class="section-title">{{ i18n "recentPosts" }}</h2>
+    {{ range first 10 (where site.RegularPages "Section" "in" (slice "posts" "post")) }}
+      <article class="post-item">
+        <div class="post-header">
+          <h3 class="post-title">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </h3>
+          {{ if .Date }}
+          <time datetime="{{ .Date.Format "2006-01-02" }}">
+            {{ .Date.Format "Jan 2, 2006" }}
+          </time>
+          {{ end }}
+        </div>
+        {{ with .Summary }}
+        <p class="post-summary">{{ . }}</p>
+        {{ end }}
+      </article>
+    {{ end }}
+  </div>
+{{ end }}

@@ -1,0 +1,60 @@
+@use 'base' as *;
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: $c-bg-soft;
+    
+    [data-theme="dark"] & {
+      background-color: $c-bg-soft-dark;
+    }
+  }
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    color: $c-text-light;
+    transition: color 0.2s ease;
+    
+    [data-theme="dark"] & {
+      color: $c-text-light-dark;
+    }
+  }
+  
+  &:hover svg {
+    color: $c-text;
+    
+    [data-theme="dark"] & {
+      color: $c-text-dark;
+    }
+  }
+}
+
+.sun-icon {
+  display: none;
+}
+
+.moon-icon {
+  display: block;
+}
+
+[data-theme="dark"] {
+  .sun-icon {
+    display: block;
+  }
+  
+  .moon-icon {
+    display: none;
+  }
+}

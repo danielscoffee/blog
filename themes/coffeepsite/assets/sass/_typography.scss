@@ -1,0 +1,49 @@
+@use 'base' as *;
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: $c-text;
+  
+  [data-theme="dark"] & {
+    color: $c-text-dark;
+  }
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 2em;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin-bottom: 1.25rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+  
+  &:hover {
+    border-bottom-color: $c-accent;
+    opacity: 0.8;
+    
+    [data-theme="dark"] & {
+      border-bottom-color: $c-accent-dark;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+@use 'base' as *;
+
+code {
+  font-family: $font-mono;
+  font-size: 0.9em;
+  padding: 0.2em 0.4em;
+  background-color: $c-bg-soft;
+  border-radius: 3px;
+  
+  [data-theme="dark"] & {
+    background-color: $c-bg-soft-dark;
+  }
+}
+
+pre {
+  background-color: $c-bg-soft;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+  
+  [data-theme="dark"] & {
+    background-color: $c-bg-soft-dark;
+  }
+  
+  code {
+    padding: 0;
+    background: none;
+  }
+}
+
+ul, ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+blockquote {
+  border-left: 3px solid $c-border;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: $c-text-light;
+  font-style: italic;
+  
+  [data-theme="dark"] & {
+    border-left-color: $c-border-dark;
+    color: $c-text-light-dark;
+  }
+}
+
+.text-muted {
+  color: $c-text-light;
+  opacity: 0.75;
+  
+  [data-theme="dark"] & {
+    color: $c-text-light-dark;
+  }
+}

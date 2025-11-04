@@ -1,0 +1,38 @@
+@use 'base' as *;
+
+header {
+  margin-bottom: 5rem;
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  padding: 0 1.5rem;
+}
+
+.header-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  max-width: 100%;
+}
+
+.header-menu {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0;
+  opacity: 0.95;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
