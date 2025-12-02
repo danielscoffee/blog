@@ -5,7 +5,7 @@ date = 2025-12-02
 
 ## Bem-vindo 
 
-E aí! Eu sou o Daniel, um desenvolvedor que ama café, código e compartilhar conhecimento.
+E aí! Eu sou o Daniel, um desenvolvedor e indie hacker. 
 
 Este é meu espaço pessoal onde escrevo sobre:
 
