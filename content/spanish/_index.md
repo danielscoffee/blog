@@ -3,7 +3,7 @@ title = "Inicio"
 date = 2025-12-02
 +++
 
-# Bienvenido
+## Bienvenido
 
 ¡Hola! Soy Daniel, un desarrollador y indie hacker 
 
