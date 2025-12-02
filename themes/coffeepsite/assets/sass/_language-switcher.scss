@@ -50,7 +50,7 @@
 
 .lang-dropdown {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: 100%;
   right: 0;
   min-width: 140px;
   background-color: $c-bg;
@@ -63,11 +63,21 @@
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
   z-index: 100;
   overflow: hidden;
+  padding-top: 0.5rem;
   
   [data-theme="dark"] & {
     background-color: $c-bg-dark;
     border-color: $c-border-dark;
     box-shadow: $shadow-dark;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -0.5rem;
+    left: 0;
+    right: 0;
+    height: 0.5rem;
   }
 }
 

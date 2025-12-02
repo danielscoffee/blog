@@ -7,26 +7,24 @@
     </svg>
   </button>
   <div class="lang-dropdown">
+    {{- $currentPage := . }}
     {{- range site.Home.AllTranslations }}
-      {{- $isCurrentLang := eq .Language.Lang $.Language.Lang }}
+      {{- $targetLang := .Language.Lang }}
+      {{- $isCurrentLang := eq $targetLang $currentPage.Language.Lang }}
       {{- $url := .RelPermalink }}
-      {{- if and (not $isCurrentLang) $.IsTranslated }}
-        {{- range $.Translations }}
-          {{- if eq .Language.Lang $isCurrentLang }}
+      {{- if $isCurrentLang }}
+        {{- $url = $currentPage.RelPermalink }}
+      {{- else if $currentPage.IsTranslated }}
+        {{- range $currentPage.Translations }}
+          {{- if eq .Language.Lang $targetLang }}
             {{- $url = .RelPermalink }}
           {{- end }}
         {{- end }}
-      {{- else if not $isCurrentLang }}
-        {{- if $.IsPage }}
-          {{- $url = printf "/%s/" .Language.Lang }}
-        {{- else }}
-          {{- $url = .RelPermalink }}
-        {{- end }}
       {{- else }}
-        {{- $url = $.RelPermalink }}
+        {{- $url = .RelPermalink }}
       {{- end }}
       <a href="{{ $url }}" 
-         lang="{{ .Language.Lang }}" 
+         lang="{{ $targetLang }}" 
          class="lang-link {{ if $isCurrentLang }}active{{ end }}">
         {{ .Language.LanguageName }}
       </a>

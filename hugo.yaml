@@ -32,15 +32,15 @@ languages:
         main:
           - identifier: home
             name: Home
-            pageRef: /pt/
+            pageRef: /
             weight: 10
           - identifier: posts
             name: Posts
-            pageRef: /pt/posts
+            pageRef: /posts
             weight: 20
           - identifier: tag
             name: Tags
-            pageRef: /pt/tags
+            pageRef: /tags
             weight: 30
   es:
       contentDir: content/spanish
@@ -50,14 +50,14 @@ languages:
         main:
           - identifier: home
             name: Home
-            pageRef: /es/
+            pageRef: /
             weight: 10
           - identifier: posts
             name: Posts
-            pageRef: /es/posts
+            pageRef: /posts
             weight: 20
           - identifier: tag
             name: Tags
-            pageRef: /es/tags
+            pageRef: /tags
             weight: 30
 

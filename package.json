@@ -1,0 +1,11 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "repository": "https://github.com/danielscoffee/blog.git",
+  "author": "danielscoffee <danielrsantoscontato@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "prettier-plugin-go-template": "^0.0.15"
+  }
+}
