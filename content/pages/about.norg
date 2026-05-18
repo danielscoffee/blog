@@ -6,8 +6,30 @@ summary: Who I am and what I build.
 draft: false
 @end
 
-* About me
+Hi, I'm Daniel.
 
-I build software with Go, Neovim, and small focused tools.
+Backend developer. Systems enjoyer. Production bug survivor.
 
-I care about readable architecture, fast feedback loops, and shipping.
+I work on healthcare software in production, mostly around Java, PL/SQL, Kafka, AWS, Docker, and event-driven systems.
+
+A lot of my time is spent close to real systems: debugging weird bugs, reading old code, handling incidents, chasing edge cases, and making things less chaotic.
+
+Outside of work, I build things in Go — routing engines, backend infrastructure, devtools, APIs, and experiments with distributed systems.
+
+I like software that is simple, observable, fast enough, and boring in production.
+
+** Current interests
+
+- Backend engineering
+- Distributed systems
+- Go
+- Infrastructure
+- Developer tools
+- Event-driven systems
+- Fintech / healthtech infrastructure
+- Open source
+- AI agents
+
+Still early.
+Still learning.
+Still shipping.
