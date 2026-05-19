@@ -1,0 +1,58 @@
+@document.meta
+title: Devlog 2026-05-19 — bento grid + nested routes
+slug: devlog-20260519
+date: 2026-05-19
+summary: Adding the bento grid for subposts and wiring up /projects/{slug}/{post}.
+tags: [devlog, css, routing]
+draft: false
+@end
+
+* Devlog — 2026-05-19
+Today was layout day. Got the bento grid working and the nested routes wired end-to-end.
+
+** Work done
+*** DONE add ProjectSubPost type
+*** DONE folder-walking loader with draft + dup-slug checks
+*** DONE /projects/{slug}/{post} route
+*** DONE 301 redirect for legacy /project/{slug}
+*** DONE bento grid CSS with featured first card
+*** DOING richer summary rendering on cards
+
+** Bento layout
+The grid uses `auto-fit` + `minmax(220px, 1fr)`, and the first card gets a modifier class that spans 2 columns and 2 rows. On screens under 640px the featured span collapses back to a normal cell.
+
+@code css
+.project-subposts-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-auto-rows: minmax(140px, auto);
+}
+
+.project-subpost-card--featured {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+@end
+
+** Search updates
+Subposts now show up in search with the correct nested URL. Added a `ParentSlug` field to `SearchDoc` so `docURL` can build `/projects/{parent}/{slug}` when present.
+
+@code go
+func docURL(doc content.SearchDoc) string {
+    if doc.Type == "projects" {
+        if doc.ParentSlug != "" {
+            return "/projects/" + doc.ParentSlug + "/" + doc.Slug
+        }
+        return "/projects/" + doc.Slug
+    }
+    return "/post/" + doc.Slug
+}
+@end
+
+** Tomorrow
+- wire RSS to include subposts
+- bigger featured tile typography
+- maybe a tag chip per card
+
+> Shipped feels good. The route reorg was the scariest piece and it landed without breaking the existing tag and post routes.

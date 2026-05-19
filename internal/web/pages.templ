@@ -1,6 +1,10 @@
 package web
 
-import "github.com/danielscoffee/danielscoffee.me/internal/content"
+import (
+	"strconv"
+
+	"github.com/danielscoffee/danielscoffee.me/internal/content"
+)
 
 templ HomePage(posts []content.Post) {
 	@Base("Daniel's Site", "Personal website and blog") {
@@ -60,6 +64,43 @@ templ ProjectDetailPage(project content.Project) {
 			</header>
 			@templ.Raw(string(project.BodyHTML))
 		</article>
+		if len(project.SubPosts) > 0 {
+			<section class="section-block">
+				<h2 class="section-title">Devlog &amp; notes</h2>
+				@ProjectSubPostGrid(project)
+			</section>
+		}
+	}
+}
+
+templ ProjectSubPostGrid(project content.Project) {
+	<ul class="project-subposts-grid" data-count={ strconv.Itoa(len(project.SubPosts)) }>
+		for _, sub := range project.SubPosts {
+			<li class="project-subpost-card">
+				<a class="project-subpost-link" href={ templ.SafeURL("/projects/" + project.Slug + "/" + sub.Slug) }>
+					<h3 class="project-subpost-title">{ sub.Title }</h3>
+					if sub.Summary != "" {
+						<p class="project-subpost-summary">{ sub.Summary }</p>
+					}
+					<p class="project-subpost-date">{ sub.Date }</p>
+				</a>
+			</li>
+		}
+	</ul>
+}
+
+templ ProjectSubPostPage(project content.Project, sub content.ProjectSubPost) {
+	@Base(sub.Title, sub.Summary) {
+		<nav class="project-subpost-breadcrumb">
+			<a class="project-subpost-back" href={ templ.SafeURL("/projects/" + project.Slug) }>&larr; { project.Title }</a>
+		</nav>
+		<article class="post-prose">
+			<header class="post-header">
+				<h1 class="post-title">{ sub.Title }</h1>
+				<p class="post-date">{ sub.Date }</p>
+			</header>
+			@templ.Raw(string(sub.BodyHTML))
+		</article>
 	}
 }
 
@@ -106,7 +147,7 @@ templ ProjectList(projects []content.Project) {
 	<ul class="project-list">
 		for _, project := range projects {
 			<li class="project-item">
-				<a class="project-link" href={ templ.SafeURL("/project/" + project.Slug) }>{ project.Title }</a>
+				<a class="project-link" href={ templ.SafeURL("/projects/" + project.Slug) }>{ project.Title }</a>
 				<p class="project-summary">{ project.Summary }</p>
 				<div class="post-meta-row">
 					<p class="post-date">{ project.Date }</p>

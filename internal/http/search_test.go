@@ -29,6 +29,20 @@ func TestSearchIndexer_FilterAndRanking(t *testing.T) {
 	}
 }
 
+func TestSearchIndexer_SubPostURL(t *testing.T) {
+	docs := []content.SearchDoc{
+		{Type: "projects", Title: "Rebuild", Slug: "rebuild", ParentSlug: "blog-project", Date: "2026-05-10", Summary: "rebuild"},
+	}
+	idx := NewSearchIndexer(docs)
+	results := idx.Search("projects rebuild")
+	if len(results) != 1 {
+		t.Fatalf("expected 1 result, got %d", len(results))
+	}
+	if results[0].URL != "/projects/blog-project/rebuild" {
+		t.Fatalf("expected nested subpost URL, got %q", results[0].URL)
+	}
+}
+
 func TestSearchIndexer_AllItemsForBareFilter(t *testing.T) {
 	docs := []content.SearchDoc{
 		{Type: "blog", Title: "Go internals", Slug: "go-internals", Date: "2026-05-01"},

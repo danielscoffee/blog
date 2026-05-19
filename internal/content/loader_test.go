@@ -168,17 +168,28 @@ date: 2026-05-01
 	}
 }
 
+func writeProjectFile(t *testing.T, root, project, name, body string) {
+	t.Helper()
+	dir := filepath.Join(root, project)
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatalf("mkdir %s: %v", dir, err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, name), []byte(body), 0o644); err != nil {
+		t.Fatalf("write %s/%s: %v", dir, name, err)
+	}
+}
+
 func TestLoadProjects_SortsNewestFirst(t *testing.T) {
 	dir := t.TempDir()
 
-	writePost(t, dir, "one.norg", `@document.meta
+	writeProjectFile(t, dir, "one", "index.norg", `@document.meta
 title: One
 slug: one
 date: 2026-01-01
 summary: one
 @end
 body`)
-	writePost(t, dir, "two.norg", `@document.meta
+	writeProjectFile(t, dir, "two", "index.norg", `@document.meta
 title: Two
 slug: two
 date: 2026-02-01
@@ -195,6 +206,92 @@ body`)
 	}
 	if projects[0].Slug != "two" {
 		t.Fatalf("expected newest project first, got %q", projects[0].Slug)
+	}
+}
+
+func TestLoadProjects_LoadsSubPostsSortedAndSkipsDrafts(t *testing.T) {
+	dir := t.TempDir()
+
+	writeProjectFile(t, dir, "blog-project", "index.norg", `@document.meta
+title: Blog Project
+slug: blog-project
+date: 2026-05-01
+summary: overview
+@end
+body`)
+	writeProjectFile(t, dir, "blog-project", "rebuild.norg", `@document.meta
+title: Rebuild
+slug: rebuild
+date: 2026-05-10
+summary: how
+@end
+body`)
+	writeProjectFile(t, dir, "blog-project", "devlog.norg", `@document.meta
+title: Devlog
+slug: devlog
+date: 2026-05-19
+summary: devlog
+@end
+body`)
+	writeProjectFile(t, dir, "blog-project", "secret.norg", `@document.meta
+title: Secret
+slug: secret
+date: 2026-05-20
+draft: true
+@end
+body`)
+
+	projects, err := LoadProjects(dir)
+	if err != nil {
+		t.Fatalf("LoadProjects returned error: %v", err)
+	}
+	if len(projects) != 1 {
+		t.Fatalf("expected 1 project, got %d", len(projects))
+	}
+	subs := projects[0].SubPosts
+	if len(subs) != 2 {
+		t.Fatalf("expected 2 subposts, got %d", len(subs))
+	}
+	if subs[0].Slug != "devlog" {
+		t.Fatalf("expected newest subpost first, got %q", subs[0].Slug)
+	}
+	if subs[0].ParentSlug != "blog-project" {
+		t.Fatalf("expected parent slug blog-project, got %q", subs[0].ParentSlug)
+	}
+}
+
+func TestLoadProjects_SkipsDraftIndex(t *testing.T) {
+	dir := t.TempDir()
+
+	writeProjectFile(t, dir, "hidden", "index.norg", `@document.meta
+title: Hidden
+slug: hidden
+date: 2026-05-01
+draft: true
+@end
+body`)
+
+	projects, err := LoadProjects(dir)
+	if err != nil {
+		t.Fatalf("LoadProjects returned error: %v", err)
+	}
+	if len(projects) != 0 {
+		t.Fatalf("expected 0 projects, got %d", len(projects))
+	}
+}
+
+func TestLoadProjects_IgnoresFoldersWithoutIndex(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(dir, "empty"), 0o755); err != nil {
+		t.Fatalf("mkdir: %v", err)
+	}
+
+	projects, err := LoadProjects(dir)
+	if err != nil {
+		t.Fatalf("LoadProjects returned error: %v", err)
+	}
+	if len(projects) != 0 {
+		t.Fatalf("expected 0 projects, got %d", len(projects))
 	}
 }
 

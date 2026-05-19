@@ -134,7 +134,10 @@ func scoreDoc(doc content.SearchDoc, tokens []string) int {
 
 func docURL(doc content.SearchDoc) string {
 	if doc.Type == "projects" {
-		return "/project/" + doc.Slug
+		if doc.ParentSlug != "" {
+			return "/projects/" + doc.ParentSlug + "/" + doc.Slug
+		}
+		return "/projects/" + doc.Slug
 	}
 	return "/post/" + doc.Slug
 }

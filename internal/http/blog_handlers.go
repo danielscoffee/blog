@@ -28,20 +28,45 @@ func (s *Server) projectsIndexHandler(w http.ResponseWriter, r *http.Request) {
 	s.renderComponent(w, r, web.ProjectsIndexPage(s.projectStore.All()))
 }
 
-func (s *Server) projectDetailHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Server) projectsTreeHandler(w http.ResponseWriter, r *http.Request) {
+	rest := strings.Trim(strings.TrimPrefix(r.URL.Path, "/projects/"), "/")
+	if rest == "" {
+		http.Redirect(w, r, "/projects", http.StatusFound)
+		return
+	}
+
+	parts := strings.Split(rest, "/")
+	if len(parts) > 2 {
+		http.NotFound(w, r)
+		return
+	}
+
+	projectSlug := parts[0]
+	if len(parts) == 1 {
+		project, ok := s.projectStore.BySlug(projectSlug)
+		if !ok {
+			http.NotFound(w, r)
+			return
+		}
+		s.renderComponent(w, r, web.ProjectDetailPage(project))
+		return
+	}
+
+	project, sub, ok := s.projectStore.SubPost(projectSlug, parts[1])
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	s.renderComponent(w, r, web.ProjectSubPostPage(project, sub))
+}
+
+func (s *Server) legacyProjectRedirectHandler(w http.ResponseWriter, r *http.Request) {
 	slug, ok := pathSuffix(r.URL.Path, "/project/")
 	if !ok {
 		http.NotFound(w, r)
 		return
 	}
-
-	project, ok := s.projectStore.BySlug(slug)
-	if !ok {
-		http.NotFound(w, r)
-		return
-	}
-
-	s.renderComponent(w, r, web.ProjectDetailPage(project))
+	http.Redirect(w, r, "/projects/"+slug, http.StatusMovedPermanently)
 }
 
 func (s *Server) postDetailHandler(w http.ResponseWriter, r *http.Request) {

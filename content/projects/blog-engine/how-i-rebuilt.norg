@@ -1,0 +1,52 @@
+@document.meta
+title: How I rebuilt the blog engine
+slug: how-i-rebuilt
+date: 2026-05-10
+summary: From flat Markdown files to a typed Go pipeline with a Neorg parser.
+tags: [go, neorg, refactor]
+draft: false
+@end
+
+* How I rebuilt the blog engine
+The old version was a pile of Markdown files glued together with a templating helper. It worked, but it was hard to extend with project devlogs, tags, and search.
+
+** Goals
+1. One source format: *Neorg*
+2. One binary deploy
+3. Folder-based projects, not flat files
+4. Search that actually understands content types
+
+** Loading pipeline
+The loader walks `content/projects/<slug>/` and treats `index.norg` as the project entry point. Every other `.norg` file becomes a subpost.
+
+@code go
+func LoadProjects(dir string) ([]Project, error) {
+    folders, err := os.ReadDir(dir)
+    if err != nil {
+        if os.IsNotExist(err) {
+            return []Project{}, nil
+        }
+        return nil, fmt.Errorf("read projects dir: %w", err)
+    }
+    // ... walk folders, load index.norg, then siblings
+}
+@end
+
+** Routing trick
+Go's `net/http` ServeMux picks the longest matching pattern. Registering both `/projects` (exact) and `/projects/` (prefix) lets the same prefix family serve three URL shapes:
+
+@table
+| URL | Handler |
+| - | - |
+| /projects | index |
+| /projects/{slug} | project detail |
+| /projects/{slug}/{post} | subpost detail |
+@end
+
+** Inline formatting sanity check
+Just to prove the parser handles *bold*, /italic/, _underline_, !spoiler! and inline math $E = mc^2$ in the wild.
+
+> Lesson learned: parse once at startup, query in-memory at request time. No DB, no cache invalidation, no surprises.
+
+#priority high
+The next devlog covers the bento grid layout.

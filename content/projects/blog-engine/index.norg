@@ -1,0 +1,48 @@
+@document.meta
+title: Blog Engine
+slug: blog-engine
+date: 2026-05-19
+summary: A Go + templ blog engine with first-class Neorg support, served from a single binary.
+tags: [go, templ, neorg, web]
+draft: false
+@end
+
+* Overview
+This is the engine powering /this/ site. It started as a weekend hack and turned into a small static-ish stack:
+- *Go* HTTP server with stdlib `net/http`
+- *templ* for typed templates
+- *Neorg* (.norg) as the authoring format
+- *Tailwind* for styling
+
+** Why a custom engine
+I wanted three things off the shelf systems did not give me together:
+- _Neorg_ as the source of truth, not Markdown
+- a single deployable binary with no JS framework
+- folder-based projects with nested devlogs
+
+** What works today
+*** DONE folder-based project loader
+*** DONE nested /projects/{slug}/{post} routes
+*** DONE bento grid for devlogs
+*** DOING richer search ranking
+*** TODO RSS for project subposts
+*** CANCELLED comments via third-party widget
+
+** Stack at a glance
+@table
+| Layer | Tool | Notes |
+| - | - | - |
+| Server | net/http | stdlib mux, longest-prefix routing |
+| Templates | a-h/templ | typed, compiled to Go |
+| Content | Neorg parser | custom, in `internal/content` |
+| Styles | Tailwind v4 | + handwritten components |
+@end
+
+** Glossary
+$ index.norg: required entry file for each project folder; defines the project metadata.
+$ subpost: any other .norg file inside the project folder, listed in the bento grid.
+$ bento grid: responsive CSS grid where the first card spans 2x2 as the featured tile.
+
+> The engine is intentionally small: ~2k LOC of Go does loading, routing, rendering, and search.
+
+See the devlogs below for *how* it came together.
