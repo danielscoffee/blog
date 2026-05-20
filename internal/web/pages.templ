@@ -177,3 +177,25 @@ templ BlogPostPage(post content.Post) {
 		</article>
 	}
 }
+
+templ NotFoundPage() {
+	@Base("Page not found", "The requested page could not be found") {
+		<section class="intro-block error-page">
+			<p class="page-subtitle">404</p>
+			<h1 class="page-title">Page not found</h1>
+			<p class="page-subtitle">This page wandered off, or the link is wrong.</p>
+			<a class="site-nav-link" href="/blog">Back to blog</a>
+		</section>
+	}
+}
+
+templ ServerErrorPage() {
+	@Base("Something broke", "An internal server error occurred") {
+		<section class="intro-block error-page">
+			<p class="page-subtitle">500</p>
+			<h1 class="page-title">Something broke</h1>
+			<p class="page-subtitle">Server hit a problem. Try again in a minute.</p>
+			<a class="site-nav-link" href="/blog">Back to blog</a>
+		</section>
+	}
+}

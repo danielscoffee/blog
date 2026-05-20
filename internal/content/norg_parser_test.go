@@ -94,6 +94,26 @@ fmt.Println("ok")
 	}
 }
 
+func TestParseNorg_PreservesUTF8Punctuation(t *testing.T) {
+	raw := "@document.meta\n" +
+		"title: UTF8\n" +
+		"slug: utf8\n" +
+		"date: 2026-05-01\n" +
+		"@end\n" +
+		"Search is one of the few things on this site that runs on every request. No DB, no Elastic — just a slice of `SearchDoc` and a scorer that walks it.\n"
+
+	_, _, html, err := parseNorg(raw)
+	if err != nil {
+		t.Fatalf("parseNorg error: %v", err)
+	}
+	if !strings.Contains(html, "Elastic — just") {
+		t.Fatalf("expected em dash preserved, got %s", html)
+	}
+	if strings.Contains(html, "â") {
+		t.Fatalf("expected no mojibake, got %s", html)
+	}
+}
+
 func TestParseNorg_MissingEndFails(t *testing.T) {
 	_, _, _, err := parseNorg("@document.meta\ntitle: X\n")
 	if err == nil {

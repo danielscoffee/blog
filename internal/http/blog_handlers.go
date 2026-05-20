@@ -10,7 +10,7 @@ import (
 
 func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		s.renderNotFound(w, r)
 		return
 	}
 	http.Redirect(w, r, "/blog", http.StatusFound)
@@ -37,7 +37,7 @@ func (s *Server) projectsTreeHandler(w http.ResponseWriter, r *http.Request) {
 
 	parts := strings.Split(rest, "/")
 	if len(parts) > 2 {
-		http.NotFound(w, r)
+		s.renderNotFound(w, r)
 		return
 	}
 
@@ -45,7 +45,7 @@ func (s *Server) projectsTreeHandler(w http.ResponseWriter, r *http.Request) {
 	if len(parts) == 1 {
 		project, ok := s.projectStore.BySlug(projectSlug)
 		if !ok {
-			http.NotFound(w, r)
+			s.renderNotFound(w, r)
 			return
 		}
 		s.renderComponent(w, r, web.ProjectDetailPage(project))
@@ -54,7 +54,7 @@ func (s *Server) projectsTreeHandler(w http.ResponseWriter, r *http.Request) {
 
 	project, sub, ok := s.projectStore.SubPost(projectSlug, parts[1])
 	if !ok {
-		http.NotFound(w, r)
+		s.renderNotFound(w, r)
 		return
 	}
 	s.renderComponent(w, r, web.ProjectSubPostPage(project, sub))
@@ -63,7 +63,7 @@ func (s *Server) projectsTreeHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) legacyProjectRedirectHandler(w http.ResponseWriter, r *http.Request) {
 	slug, ok := pathSuffix(r.URL.Path, "/project/")
 	if !ok {
-		http.NotFound(w, r)
+		s.renderNotFound(w, r)
 		return
 	}
 	http.Redirect(w, r, "/projects/"+slug, http.StatusMovedPermanently)
@@ -72,13 +72,13 @@ func (s *Server) legacyProjectRedirectHandler(w http.ResponseWriter, r *http.Req
 func (s *Server) postDetailHandler(w http.ResponseWriter, r *http.Request) {
 	slug, ok := pathSuffix(r.URL.Path, "/post/")
 	if !ok {
-		http.NotFound(w, r)
+		s.renderNotFound(w, r)
 		return
 	}
 
 	post, ok := s.contentStore.BySlug(slug)
 	if !ok {
-		http.NotFound(w, r)
+		s.renderNotFound(w, r)
 		return
 	}
 
@@ -88,7 +88,7 @@ func (s *Server) postDetailHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) tagIndexHandler(w http.ResponseWriter, r *http.Request) {
 	tag, ok := pathSuffix(r.URL.Path, "/tag/")
 	if !ok {
-		http.NotFound(w, r)
+		s.renderNotFound(w, r)
 		return
 	}
 
@@ -100,7 +100,23 @@ func (s *Server) renderComponent(w http.ResponseWriter, r *http.Request, compone
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := component.Render(r.Context(), w); err != nil {
 		s.logger.Error().Err(err).Msg("render component failed")
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		s.renderServerError(w, r)
+	}
+}
+
+func (s *Server) renderNotFound(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusNotFound)
+	if err := web.NotFoundPage().Render(r.Context(), w); err != nil {
+		s.logger.Error().Err(err).Msg("render not found page failed")
+	}
+}
+
+func (s *Server) renderServerError(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusInternalServerError)
+	if err := web.ServerErrorPage().Render(r.Context(), w); err != nil {
+		s.logger.Error().Err(err).Msg("render server error page failed")
 	}
 }
 

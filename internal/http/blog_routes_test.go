@@ -102,12 +102,12 @@ func TestBlogRoutes(t *testing.T) {
 		{path: "/projects/side-project", statusCode: http.StatusOK, contains: "Side Project"},
 		{path: "/projects/side-project", statusCode: http.StatusOK, contains: "project-subposts-grid"},
 		{path: "/projects/side-project/rebuild", statusCode: http.StatusOK, contains: "Rebuild Notes"},
-		{path: "/projects/side-project/missing", statusCode: http.StatusNotFound, contains: "404 page not found"},
-		{path: "/projects/missing", statusCode: http.StatusNotFound, contains: "404 page not found"},
+		{path: "/projects/side-project/missing", statusCode: http.StatusNotFound, contains: "Page not found"},
+		{path: "/projects/missing", statusCode: http.StatusNotFound, contains: "Page not found"},
 		{path: "/project/side-project", statusCode: http.StatusMovedPermanently, contains: ""},
 		{path: "/post/hello-world", statusCode: http.StatusOK, contains: "<article"},
 		{path: "/tag/go", statusCode: http.StatusOK, contains: "Tagged with"},
-		{path: "/post/missing", statusCode: http.StatusNotFound, contains: "404 page not found"},
+		{path: "/post/missing", statusCode: http.StatusNotFound, contains: "Page not found"},
 	}
 
 	for _, tc := range cases {

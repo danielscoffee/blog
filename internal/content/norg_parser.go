@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/alecthomas/chroma/v2/lexers"
@@ -621,8 +622,9 @@ func renderTextWithModifiers(raw string) string {
 				i += 2
 				continue
 			}
-			b.WriteString(html.EscapeString(string(delim)))
-			i++
+			r, size := utf8.DecodeRuneInString(raw[i:])
+			b.WriteString(html.EscapeString(string(r)))
+			i += size
 			continue
 		}
 

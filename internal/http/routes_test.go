@@ -20,6 +20,24 @@ func TestUnknownRouteReturnsNotFound(t *testing.T) {
 	if w.Code != http.StatusNotFound {
 		t.Fatalf("expected 404 for unknown route, got %d", w.Code)
 	}
+	if !strings.Contains(w.Body.String(), "Page not found") {
+		t.Fatalf("expected custom 404 page, got %q", w.Body.String())
+	}
+}
+
+func TestRenderServerErrorReturnsCustomPage(t *testing.T) {
+	s := testBlogServer()
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodGet, "/boom", nil)
+
+	s.renderServerError(w, r)
+
+	if w.Code != http.StatusInternalServerError {
+		t.Fatalf("expected 500, got %d", w.Code)
+	}
+	if !strings.Contains(w.Body.String(), "Something broke") {
+		t.Fatalf("expected custom 500 page, got %q", w.Body.String())
+	}
 }
 
 func TestRequestLoggingMiddleware_LogsRequestSummary(t *testing.T) {

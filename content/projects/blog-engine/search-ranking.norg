@@ -1,0 +1,56 @@
+@document.meta
+title: Tuning the search ranker
+slug: search-ranking
+date: 2026-05-15
+summary: Why the in-memory ranker scores title, tag, summary, and body differently — and where it still gets it wrong.
+tags: [search, ranking, devlog]
+draft: false
+@end
+
+* Tuning the search ranker
+Search is one of the few things on this site that runs on every request. No DB, no Elastic — just a slice of `SearchDoc` and a scorer that walks it.
+
+** The current scoring weights
+@table
+| Field | Weight |
+| - | - |
+| title | 50 |
+| tags | 30 |
+| summary | 20 |
+| body | 10 |
+@end
+
+Title hits dominate on purpose. If you search /norg/ and a post has "Norg" in the title, that's almost certainly the result you want — outranking five other posts that mention the word in passing.
+
+** The actual scorer
+@code go
+func scoreDoc(doc content.SearchDoc, tokens []string) int {
+    score := 0
+    for _, token := range tokens {
+        if strings.Contains(strings.ToLower(doc.Title), token) {
+            score += 50
+        }
+        if strings.Contains(strings.ToLower(strings.Join(doc.Tags, " ")), token) {
+            score += 30
+        }
+        if strings.Contains(strings.ToLower(doc.Summary), token) {
+            score += 20
+        }
+        if strings.Contains(strings.ToLower(doc.Body), token) {
+            score += 10
+        }
+    }
+    return score
+}
+@end
+
+** Where it falls apart
+*** DONE type filter prefix (`blog ...`, `projects ...`)
+*** DONE ParentSlug for subpost URLs in results
+*** DOING phrase matching ("project subposts" as one token, not two)
+*** TODO stemming so /rebuild/ matches /rebuilt/
+*** TODO tag boost cap so a post tagged five times with the same word does not run away
+
+*Phrase matching* is the next thing to land. Right now the indexer splits on whitespace and treats each token independently, so a search for `bento grid` ranks anything containing /bento/ or /grid/ even if they never appear together.
+
+> Lesson: simple scorers are easy to read and easy to be wrong about. Always sanity-check against real queries before trusting the numbers.
