@@ -1,4 +1,4 @@
-FROM golang:1.24.4-alpine AS build
+FROM golang:1.26.3-alpine AS build
 RUN apk add --no-cache curl libstdc++ libgcc
 
 WORKDIR /app
@@ -13,12 +13,14 @@ RUN go install github.com/a-h/templ/cmd/templ@latest && \
     chmod +x tailwindcss && \
     ./tailwindcss -i internal/web/styles/input.css -o internal/web/assets/css/output.css
 
-RUN go build -o main cmd/api/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o main cmd/api/main.go
 
-FROM alpine:3.20.1 AS prod
+FROM gcr.io/distroless/static-debian12:nonroot AS prod
 WORKDIR /app
 COPY --from=build /app/main /app/main
+COPY --from=build /app/content /app/content
 EXPOSE 8080
-CMD ["./main"]
+USER nonroot:nonroot
+ENTRYPOINT ["/app/main"]
 
 

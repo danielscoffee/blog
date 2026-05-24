@@ -1,0 +1,24 @@
+# render.yaml — Render Blueprint for danielscoffee.me
+# Deploys the Dockerfile as a web service. Auto-deploys on push to `main`.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: danielscoffee-me
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free          # free tier spins down after ~15 min idle (cold start on next hit)
+    region: oregon      # oregon | ohio | virginia | frankfurt | singapore
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: APP_ENV
+        value: production
+      - key: LOG_FORMAT
+        value: json
+      - key: LOG_LEVEL
+        value: info
+      - key: SITE_URL
+        sync: false       # set in Render dashboard to your real URL (e.g. https://danielscoffee.me)
